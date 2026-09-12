@@ -1,0 +1,18 @@
+{
+	"name": "Hello Mail",
+	"author": "Dominik Cwiklik",
+	"license": "GPL-3.0-or-later (Elastic-derived parts CC BY-SA 3.0)",
+	"license-url": "https://github.com/dcwq/hellomail/blob/master/LICENSE",
+	"extends": "elastic",
+	"config": {
+		"supported_layouts": [
+			"widescreen"
+		],
+		"dark_mode_support": true
+	},
+	"meta": {
+		"theme-color": "#ffffff",
+		"msapplication-navbutton-color": "#ffffff"
+	},
+	"localization": true
+}

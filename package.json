@@ -1,0 +1,13 @@
+{
+  "name": "hellomail",
+  "version": "0.1.0",
+  "description": "Gmail-like Roundcube skin that extends Elastic",
+  "private": true,
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "build": "node tools/build.mjs"
+  },
+  "devDependencies": {
+    "less": "^4.2.0"
+  }
+}

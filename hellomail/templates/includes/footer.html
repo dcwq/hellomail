@@ -1,0 +1,30 @@
+<!-- SPDX-License-Identifier: CC-BY-SA-3.0 ; derived from Roundcube Elastic, (c) The Roundcube Dev Team -->
+<roundcube:add_label name="folders" />
+<roundcube:add_label name="delete" />
+<roundcube:add_label name="markread" />
+<roundcube:add_label name="markunread" />
+<roundcube:if condition="!env:framed || env:extwin" />
+</div>
+<roundcube:if condition="config:support_url" />
+<a href="<roundcube:var name='config:support_url' />" target="_blank" id="supportlink" class="hidden"><roundcube:label name="support" /></a>
+<roundcube:endif />
+<roundcube:endif />
+
+<roundcube:object name="message" id="messagestack" />
+<roundcube:if condition="!env:framed" />
+<roundcube:add_label name="settings" />
+<roundcube:add_label name="logout" />
+<roundcube:add_label name="writenewmessage" />
+<roundcube:add_label name="minimize" />
+<roundcube:add_label name="maximize" />
+<roundcube:add_label name="close" />
+<roundcube:add_label name="today" />
+<span id="hm-username" class="hidden"><roundcube:object name="username" /></span>
+<roundcube:endif />
+
+<script src="/deps/bootstrap.bundle.min.js"></script>
+<script src="/ui.js"></script>
+<script src="/hellomail.js"></script>
+
+</body>
+</html>

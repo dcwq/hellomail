@@ -1,0 +1,106 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+/**
+ * Hellogmail - Elastic variable overrides
+ *
+ * Loaded by elastic/styles/variables.less via
+ *   @import (reference, optional) "_variables";
+ * Every variable from elastic/styles/colors.less and variables.less may be
+ * redefined here. Keep this file to variables only; rules go to _styles.less.
+ */
+
+// ---------------------------------------------------------------------------
+// Theme colours (see styles/themes/) and the neutral scale
+// ---------------------------------------------------------------------------
+
+@import "themes/green";   // default theme; styles-<name>.less override it
+
+@hm-text:                   #1e293b;   // body text on light surfaces
+
+// Neutral greys (Tailwind slate scale)
+@hm-slate-50:               #f8fafc;
+@hm-slate-100:              #f1f5f9;
+@hm-slate-200:              #e2e8f0;
+@hm-slate-400:              #94a3b8;
+@hm-slate-500:              #64748b;
+@hm-slate-600:              #475569;
+@hm-slate-700:              #334155;
+@hm-slate-800:              #1e293b;
+
+// Derived from the theme
+@hm-selected-bg:            tint(@hm-accent, 78%);              // light selection pill
+@hm-dark-selected-bg:       mix(@hm-accent, @hm-bg-dark, 22%);
+@hm-dark-surface:           lighten(@hm-bg-dark, 4%);           // one step above the background
+@hm-dark-hover-bg:          lighten(@hm-bg-dark, 8%);
+@hm-dark-border:            lighten(@hm-bg-dark, 16%);
+
+// ---------------------------------------------------------------------------
+// Elastic core colours
+// ---------------------------------------------------------------------------
+
+@color-main:                @hm-accent;
+@color-black:               @hm-bg-dark;
+@color-font:                @hm-text;
+@color-link:                @hm-accent-text;
+@color-link-hover:          darken(@hm-accent-text, 8%);
+
+@color-layout-border:       @hm-slate-200;
+
+// Top bars: white like Gmail, the search pill provides the contrast
+@color-layout-header-background:        #fff;
+@color-toolbar-button-background-hover: @hm-slate-100;
+@color-searchbar-background:            transparent;
+
+@color-dark-popover-background:         @hm-dark-surface;
+@color-dark-popover-border:             @hm-dark-border;
+
+// A slightly wider task menu rail so Polish labels ("Tryb ciemny",
+// "O programie") fit inside the rounded buttons.
+@layout-menu-width:         86px;
+
+// ---------------------------------------------------------------------------
+// Sidebar: task menu rail + folder list share one light surface
+// ---------------------------------------------------------------------------
+
+@color-taskmenu-background:                     @hm-slate-50;
+@color-taskmenu-button:                         @hm-slate-600;
+@color-taskmenu-button-selected:                @hm-text;
+@color-taskmenu-button-selected-background:     @hm-selected-bg;
+@color-taskmenu-button-hover:                   @hm-text;
+@color-taskmenu-button-selected-hover:          @hm-text;
+@color-taskmenu-button-background-hover:        @hm-slate-200;
+@color-taskmenu-button-action:                  @hm-on-accent;  // Compose pill text
+@color-taskmenu-button-action-background:       @hm-accent;
+@color-taskmenu-button-action-hover:            @hm-on-accent;
+@color-taskmenu-button-action-background-hover: darken(@hm-accent, 8%);
+
+@color-layout-sidebar-background:   @hm-slate-50;
+
+// The drag layer inherits the task menu colour in Elastic; keep it dark.
+@color-drag-layer-background:       @hm-bg-dark;
+
+// Folder list: rounded selection, unread count as plain bold text (Gmail style)
+@color-list-selected-background:    @hm-selected-bg;
+@color-list-border:                 @hm-slate-200;
+@color-list-badge:                  @hm-text;
+@color-list-badge-background:       transparent;
+@color-list-recent:                 @hm-text;
+@color-list-recent-badge:           @hm-text;
+@color-list-recent-badge-background: transparent;
+@color-list-flagged:                @color-list;    // starred rows keep normal text colour
+
+// ---------------------------------------------------------------------------
+// Dark mode (#0F172A family)
+// ---------------------------------------------------------------------------
+
+// Text on the accent-coloured primary buttons comes from the theme
+@color-btn-primary:                     @hm-on-accent;
+
+@color-dark-main:                       @hm-accent;
+@color-dark-background:                 @hm-bg-dark;
+@color-dark-font:                       #cbd5e1;
+@color-dark-border:                     @hm-dark-border;
+@color-dark-list-border:                @hm-dark-hover-bg;
+@color-dark-list-selected:              @color-dark-font;
+@color-dark-list-selected-background:   @hm-dark-selected-bg;
+@color-dark-list-badge:                 @color-dark-font;
+@color-dark-list-badge-background:      transparent;

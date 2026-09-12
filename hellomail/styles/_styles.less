@@ -1,0 +1,1467 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+/**
+ * Hellogmail - custom rules
+ *
+ * Loaded at the very end of elastic/styles/styles.less via
+ *   @import (optional) "_styles";
+ * Prefer variable overrides in _variables.less; add rules here only when a
+ * variable cannot express the change.
+ */
+
+@import (reference) "_variables";
+
+// ---------------------------------------------------------------------------
+// Typography: system sans stack instead of Elastic's bundled Roboto
+// ---------------------------------------------------------------------------
+
+@hm-font-stack: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+body,
+input,
+button,
+select,
+textarea,
+.font-family,
+span.blockquote-link,
+.ui-widget,
+.ui-widget input,
+.ui-widget select,
+.ui-widget textarea,
+.ui-widget button {
+    font-family: @hm-font-stack;
+}
+
+// ---------------------------------------------------------------------------
+// Sidebar, part 1: the task menu rail
+// ---------------------------------------------------------------------------
+
+@media screen and (min-width: (@screen-width-xs + 1px)) {
+    // Containing block for the absolutely positioned .special-buttons below.
+    // Without it that span stretches across the whole page bottom and covers
+    // the lower part of the content pane (e.g. the Save button in settings).
+    #layout-menu {
+        position: relative;
+    }
+
+    #taskmenu {
+        a {
+            width: auto !important;      // Elastic (and its dark mode) hard-code widths
+            margin: 2px .25rem;
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: background-color .12s ease;
+
+            span.inner {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+
+                // block only where Elastic shows the labels (wide rail);
+                // between 481 and 1024px it hides them and shows icons only
+                @media screen and (min-width: (@screen-width-medium + 1px)) {
+                    display: block;
+                }
+            }
+        }
+
+        .special-buttons {
+            left: 0;
+            right: 0;
+        }
+
+        // Gmail's Compose button: a raised green pill
+        .action-buttons a.compose {
+            margin: .75rem .4rem .5rem .4rem;
+            padding: .6rem 0 .5rem 0;
+            font-weight: 600;
+            box-shadow: 0 1px 3px fade(@hm-bg-dark, 25%);
+
+            &:before {
+                font-size: 1.4rem;
+            }
+
+            &:hover,
+            &:focus {
+                box-shadow: 0 2px 6px fade(@hm-bg-dark, 30%);
+            }
+        }
+    }
+}
+
+html.dark-mode {
+    #layout-menu,
+    #taskmenu .special-buttons {
+        background-color: @hm-bg-dark;
+    }
+
+    .btn-primary {
+        color: @hm-on-accent;   // Elastic's dark mode uses light text on the accent
+    }
+
+    #taskmenu {
+        a:hover,
+        a.selected {
+            background-color: @hm-dark-selected-bg;
+        }
+
+        .action-buttons a.compose {
+            color: @hm-on-accent;
+            background: @hm-accent;
+
+            &:hover,
+            &:focus {
+                background: darken(@hm-accent, 8%);
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Sidebar, part 2: folder list
+// ---------------------------------------------------------------------------
+
+#layout-sidebar.listbox {
+    border-right: 0;   // rail and folder list read as one surface
+
+    & > .header {
+        background: transparent;
+        border-bottom: 0;
+        font-weight: 500;
+        color: @hm-slate-500;
+
+        .header-title.username {
+            font-size: .9rem;
+        }
+    }
+
+    & > .footer {
+        border-top: 0;
+        background: transparent;
+    }
+}
+
+.folderlist {
+    padding: .25rem 0;
+
+    li {
+        border-bottom: 0 !important;
+
+        & > a,
+        & > div > a {
+            width: auto;                 // .listing gives 100%; leave room for the pill's right margin
+            margin: 1px .75rem 1px 0;
+            border-radius: 0 1rem 1rem 0;
+            transition: background-color .12s ease;
+
+            &:hover,
+            &:focus {
+                background-color: @hm-slate-200;
+            }
+        }
+
+        &.selected {
+            & > a,
+            & > div > a {
+                font-weight: 600;
+                background-color: @hm-selected-bg !important;
+            }
+        }
+
+        &.mailbox .unreadcount {
+            right: .75rem;
+            margin-right: .25rem;
+            padding: 0;
+            font-weight: 700;
+        }
+    }
+}
+
+html.dark-mode {
+    // Elastic's dark mode paints the whole <li>; keep the pill on the <a> only
+    ul.treelist li.selected {
+        background-color: transparent;
+    }
+
+    .folderlist li {
+        & > a:hover,
+        & > a:focus,
+        & > div > a:hover {
+            background-color: @hm-dark-hover-bg;
+        }
+
+        &.selected > a,
+        &.selected > div > a {
+            background-color: @hm-dark-selected-bg !important;
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Sidebar, part 3: collapse to icons only (toggle injected by hellomail.js)
+// ---------------------------------------------------------------------------
+
+a.button.icon.sidebar-toggle:before {
+    content: @fa-var-bars;
+}
+
+@media screen and (max-width: @screen-width-medium) {
+    a.button.icon.sidebar-toggle {
+        display: none;   // small layouts already hide/show the sidebar themselves
+    }
+}
+
+@hm-sidebar-collapsed-width: 3.5rem;
+
+@media screen and (min-width: (@screen-width-medium + 1px)) {
+    #layout-sidebar.listbox > .header {
+        justify-content: flex-start;
+        padding-left: 0;
+
+        // The toggle occupies exactly the collapsed sidebar width in both
+        // states, so it does not move when the sidebar collapses.
+        a.sidebar-toggle {
+            order: -1;
+            flex: 0 0 @hm-sidebar-collapsed-width;
+            width: @hm-sidebar-collapsed-width;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+
+            &:before {
+                float: none;
+                margin: 0;
+                width: auto;
+            }
+        }
+    }
+
+    #layout-sidebar.listbox.collapsed {
+        flex: 0 0 @hm-sidebar-collapsed-width;
+        min-width: 0;
+        max-width: @hm-sidebar-collapsed-width;
+
+        & > .header {
+            .header-title,
+            a.sidebar-menu,
+            a.back-list-button {
+                display: none;
+            }
+        }
+
+        & > .footer {
+            display: none;
+        }
+
+        .folderlist {
+            li > a,
+            li > div > a {
+                font-size: 0;            // hides the folder name, keeps the icon
+                line-height: 2.25rem;
+                height: 2.25rem;
+                padding: 0 !important;
+                margin: 2px .5rem;
+                border-radius: 1rem;
+                text-align: center;
+                position: relative;
+
+                &:before {
+                    display: inline-block;
+                    float: none;
+                    width: auto;
+                    height: auto;
+                    margin: 0;
+                    font-size: 1.1rem;
+                    line-height: 2.25rem;
+                    vertical-align: top;
+                }
+            }
+
+            div.treetoggle,
+            .unreadcount,
+            li ul {
+                display: none;
+            }
+
+            // unread indicator: a small dot in the top-right corner of the icon pill
+            li.mailbox.unread > a:after {
+                content: "";
+                position: absolute;
+                top: .45rem;
+                right: .55rem;
+                width: .5rem;
+                height: .5rem;
+                border-radius: 50%;
+                background: @hm-accent;
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Message list, part 1: Gmail-like rows
+// ---------------------------------------------------------------------------
+
+@hm-list-read-bg:        @hm-slate-50;
+@hm-list-hover-bg:       #e8edf3;
+@hm-list-dark-read-bg:   lighten(@hm-bg-dark, 2%);
+@hm-list-dark-hover-bg:  @hm-dark-hover-bg;
+
+.messagelist {
+    // Backgrounds live on the row so the hover action strip can match them.
+    tbody tr {
+        background-color: #fff;
+
+        &:not(.unread) {
+            background-color: @hm-list-read-bg;
+        }
+
+        &.selected {
+            background-color: @hm-selected-bg;
+        }
+
+        &:hover:not(.selected) {
+            background-color: @hm-list-hover-bg;
+        }
+
+        td {
+            background-color: transparent !important;
+        }
+    }
+
+    // Gmail bolds the sender as well as the subject
+    tr.unread td.subject span.fromto {
+        font-weight: bold;
+        color: @color-list;
+    }
+
+    // Star instead of flag; the empty star is always visible, like Gmail
+    span.flagged:before {
+        content: @fa-var-star;
+        color: #f59e0b;
+    }
+
+    span.unflagged:before,
+    tr:hover span.unflagged:before,
+    tr.flaggedroot:not(:hover) span.unflagged:before {
+        &:extend(.font-icon-class);
+        .font-icon-regular(@fa-var-star);
+        color: @hm-slate-400;
+    }
+
+    // Elastic swaps the date for the size on hover; keep the date
+    tr:hover {
+        span.date {
+            display: inline;
+        }
+        span.size {
+            display: none;
+        }
+    }
+
+    &.sort-size tr:hover {
+        span.date {
+            display: none;
+        }
+        span.size {
+            display: inline;
+        }
+    }
+
+    // Body snippet (hellomail plugin); only shown in the one-line layout
+    td.subject span.snippet {
+        display: none;
+    }
+
+    // Hover actions (injected by hellomail.js)
+    .hm-actions {
+        display: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 1px;
+        align-items: center;
+        padding: 0 .5rem 0 1.25rem;
+
+        a {
+            display: inline-flex;
+            width: 2rem;
+            height: 2rem;
+            margin-left: .15rem;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: @hm-slate-600;
+            text-decoration: none;
+            cursor: pointer;
+            line-height: 1;   // the row's 35px line-height would push the glyph down
+
+            &:before {
+                &:extend(.font-icon-class);
+                float: none;
+                width: auto;
+                height: auto;
+                line-height: 1;
+                margin: 0;
+                font-size: 1.15rem;
+            }
+
+            &:hover {
+                background-color: @hm-slate-200;
+                color: @hm-text;
+            }
+
+            &.archive:before {
+                content: @fa-var-archive;
+            }
+            &.delete:before {
+                .font-icon-regular(@fa-var-trash-alt);
+            }
+            &.toggle-read:before {
+                .font-icon-regular(@fa-var-envelope-open);
+            }
+        }
+    }
+
+    tr.unread .hm-actions a.toggle-read:before {
+        .font-icon-regular(@fa-var-envelope);
+    }
+
+    tbody tr:hover .hm-actions {
+        display: flex;
+        background-color: @hm-list-hover-bg;
+    }
+
+    tbody tr.selected:hover .hm-actions {
+        background-color: @hm-selected-bg;
+    }
+}
+
+// One line per message when the list is wide enough
+@media screen and (min-width: (@screen-width-large + 1px)) {
+    // Elastic caps the list at 30% of the width; one-line rows with snippets
+    // need more. The user can still drag the column resizer.
+    #layout-list {
+        flex: 5;
+        max-width: 48%;
+    }
+
+    .messagelist {
+        tbody tr {
+            display: flex;
+            align-items: stretch;
+            position: relative;
+        }
+
+        td {
+            vertical-align: middle;
+        }
+
+        td.threads,
+        td.selection {
+            order: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        td.threads {
+            width: 1.1em;
+            padding: 0;
+        }
+
+        td.flags {
+            order: 1;
+            width: auto;
+            display: flex;
+            align-items: center;
+            padding: 0 .3rem 0 .4rem;
+
+            & > span {
+                display: inline-block;
+                height: auto;
+                line-height: 1;
+                width: 1.4rem;
+                text-align: center;
+
+                // the attachment slot is always rendered (with a nbsp when
+                // empty); keep it narrow so the sender starts close to the star
+                &.attachment {
+                    width: 1.1rem;
+                }
+
+                // Material glyphs sit in a wider em box than Font Awesome's;
+                // one step up keeps star and paperclip readable
+                &:before {
+                    font-size: 1.15rem;
+                    line-height: 1;
+                    height: auto;
+                }
+            }
+        }
+
+        td.subject {
+            order: 2;
+            flex: 1;
+            min-width: 0;
+            flex-wrap: nowrap;
+            align-items: center;
+            padding-left: .25rem;
+
+            span {
+                line-height: @listing-line-height;
+            }
+
+            span.status {
+                order: 0;
+                flex: 0 0 auto;
+
+                // Gmail has no unread dot: bold text is the indicator. Keep the
+                // replied/forwarded/deleted glyphs, they carry information.
+                &.msgicon:not(.replied):not(.forwarded):not(.deleted),
+                &.unread:not(.replied):not(.forwarded),
+                &.unreadchildren:not(.replied):not(.forwarded) {
+                    display: none;
+                }
+            }
+
+            span.fromto {
+                order: 1;
+                flex: 0 0 11rem;
+                padding-left: .25rem;
+                font-size: 100%;
+            }
+
+            span.subject {
+                order: 2;
+                flex: 0 1 auto;
+                width: auto;
+                min-width: 0;
+            }
+
+            span.snippet {
+                display: block;
+                order: 3;
+                flex: 1 1 0;
+                min-width: 0;
+                .overflow-ellipsis();
+                color: @color-list-secondary;
+                padding-left: .5rem;
+
+                &:not(:empty):before {
+                    content: "\2013";
+                    padding-right: .5rem;
+                }
+            }
+
+            span.date,
+            span.size {
+                order: 4;
+                flex: 0 0 auto;
+                margin-left: auto;
+                padding: 0 .75rem 0 .75rem;
+                white-space: nowrap;
+            }
+
+            // attachment icon moved here by hellomail.js, sits before the date
+            span.attachment {
+                order: 4;
+                flex: 0 0 auto;
+                margin-left: auto;
+                padding-left: .5rem;
+                line-height: 1;
+
+                span:before {
+                    font-size: 1.05rem;
+                    color: @hm-slate-500;
+                }
+
+                & + span.date,
+                & + span.size {
+                    margin-left: 0;
+                }
+            }
+        }
+    }
+}
+
+html.dark-mode .messagelist {
+    // starred rows: Elastic's dark mode recolours the whole row with
+    // @color-list-flagged, which is now the light-mode text colour
+    tr.flagged:not(.deleted) {
+        td,
+        td.subject span.subject a,
+        td.subject span.date,
+        td.subject span.fromto,
+        span.attachment span {
+            color: @color-dark-font;
+        }
+    }
+
+    tbody tr {
+        background-color: @hm-bg-dark;
+
+        &:not(.unread) {
+            background-color: @hm-list-dark-read-bg;
+        }
+
+        &.selected {
+            background-color: @hm-dark-selected-bg;
+        }
+
+        &:hover:not(.selected) {
+            background-color: @hm-list-dark-hover-bg;
+        }
+    }
+
+    tr.unread td.subject span.fromto {
+        color: @color-dark-font;
+    }
+
+    .hm-actions a {
+        color: @color-dark-font;
+
+        &:hover {
+            background-color: @hm-dark-border;
+        }
+    }
+
+    tbody tr:hover .hm-actions {
+        background-color: @hm-list-dark-hover-bg;
+    }
+
+    tbody tr.selected:hover .hm-actions {
+        background-color: @hm-dark-selected-bg;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Top bar, part 1: search as a rounded pill
+// ---------------------------------------------------------------------------
+
+@hm-searchbar-height: 3.4rem;
+
+.searchbar {
+    height: @hm-searchbar-height;
+    min-height: @hm-searchbar-height;
+    line-height: 2.5rem;
+    padding: .45rem .75rem;
+    border-bottom: 0;
+
+    form {
+        align-items: center;
+        height: 2.5rem;
+        border-radius: 1.25rem;
+        background-color: @hm-slate-100;
+        transition: background-color .12s ease, box-shadow .12s ease;
+
+        &:before {
+            height: 2.5rem;
+            line-height: 2.5rem;
+            margin-left: .9rem;
+        }
+
+        &:focus-within {
+            background-color: #fff;
+            box-shadow: 0 1px 4px fade(@hm-bg-dark, 25%);
+        }
+    }
+
+    input {
+        height: 2.5rem;
+        padding: 0 .5rem;
+    }
+
+    a:before {
+        height: 2.5rem;
+        line-height: 2.5rem;
+    }
+
+    a.options:before,
+    a.reset:before {
+        margin-right: .25rem;
+    }
+}
+
+html.dark-mode .searchbar form {
+    background-color: @hm-dark-surface;
+
+    &:focus-within {
+        background-color: @hm-dark-hover-bg;
+        box-shadow: none;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Top bar, part 2: account button with initial (injected by hellomail.js)
+// ---------------------------------------------------------------------------
+
+a.hm-account {
+    display: none;   // shown on wide screens only, see below
+    order: 100;
+    margin-left: auto;
+    margin-right: .5rem;
+    align-self: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    line-height: 2.25rem;
+    border-radius: 50%;
+    background-color: @hm-accent;
+    color: @hm-on-accent;
+    font-weight: 600;
+    font-size: 1rem;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover,
+    &:focus {
+        box-shadow: 0 0 0 4px fade(@hm-accent, 35%);
+        text-decoration: none;
+        color: @hm-on-accent;
+    }
+}
+
+@media screen and (min-width: (@screen-width-medium + 1px)) {
+    #layout-content > .header a.hm-account {
+        display: block;
+    }
+}
+
+#hm-account-menu {
+    .hm-account-head {
+        padding: .5rem 1rem .75rem 1rem;
+        text-align: center;
+        border-bottom: 1px solid @hm-slate-200;
+        margin-bottom: .25rem;
+
+        .hm-account-initial {
+            display: inline-block;
+            width: 3.5rem;
+            height: 3.5rem;
+            line-height: 3.5rem;
+            border-radius: 50%;
+            background-color: @hm-accent;
+            color: @hm-on-accent;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: .5rem;
+        }
+
+        .hm-account-name {
+            font-size: .9rem;
+            color: @hm-slate-600;
+            .overflow-ellipsis();
+            max-width: 16rem;
+        }
+    }
+
+    ul.menu a {
+        &.mail:before {
+            content: @fa-var-envelope;
+        }
+        &.contacts:before {
+            content: @fa-var-address-book;
+        }
+        &.settings:before {
+            content: @fa-var-cog;
+        }
+        &.theme:before {
+            content: @fa-var-moon;
+        }
+        &.about:before {
+            content: @fa-var-question-circle;
+        }
+        &.logout:before {
+            content: @fa-var-power-off;
+            color: @color-error;
+        }
+    }
+}
+
+html.dark-mode #hm-account-menu ul.menu a.theme:before {
+    content: @fa-var-sun;
+}
+
+// On wide screens those buttons live in the account menu (hellomail.js)
+@media screen and (min-width: (@screen-width-medium + 1px)) {
+    #taskmenu .special-buttons,
+    #taskmenu a.settings {
+        display: none;
+    }
+}
+
+html.dark-mode #hm-account-menu .hm-account-head {
+    border-color: @hm-dark-border;
+
+    .hm-account-name {
+        color: @color-dark-font;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Reading pane: message as a card, initials avatar, attachment chips
+// ---------------------------------------------------------------------------
+
+@hm-card-radius: .75rem;
+
+// The preview frame and the full message view share this structure.
+body.task-mail.action-preview,
+body.task-mail.action-show {
+    #layout-content > .content.frame-content {
+        background-color: @hm-slate-50;
+        padding: 1rem;
+    }
+
+    .hm-card {
+        background-color: #fff;
+        border-radius: @hm-card-radius;
+        border: 1px solid @hm-slate-200;
+        padding: 1.25rem 1.5rem 1.5rem 1.5rem;
+        min-height: 100%;
+    }
+
+    #message-header {
+        margin-bottom: .75rem;
+
+        & > .subject {
+            font-size: 1.4rem;
+            font-weight: 500;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+        }
+
+        & > .header {
+            align-items: center;
+
+            img.contactphoto {
+                width: 2.75rem;
+                height: 2.75rem;
+                margin-right: .75rem;
+            }
+        }
+
+        .header-content {
+            min-height: 2.75rem;
+        }
+
+        .header-summary {
+            margin-top: 0;
+
+            .rcmContactAddress {
+                font-weight: 600;
+                color: @hm-text;
+            }
+        }
+
+        .header-links {
+            margin-top: .1rem;
+
+            a {
+                color: @hm-slate-500;
+                font-size: 85%;
+            }
+        }
+    }
+
+    #message-content {
+        .attachmentslist:not(:empty) {
+            margin: 0 0 1rem 0;
+        }
+    }
+}
+
+// Initials avatar (hellomail.js swaps it in when no contact photo exists)
+.hm-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-right: .75rem;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: .02em;
+    user-select: none;
+}
+
+// Attachments as chips (message view and compose)
+.attachmentslist {
+    background-color: transparent;
+    border: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+
+    li {
+        align-items: center;
+        margin: 0;
+        padding: 0 .35rem 0 .75rem;
+        border: 1px solid @hm-slate-200;
+        border-radius: .6rem;
+        background-color: #fff;
+        line-height: 2.4rem;
+        transition: box-shadow .12s ease, border-color .12s ease;
+
+        &:before {
+            color: @hm-accent-text;
+            margin-right: .4rem;
+            line-height: 2.4rem;
+            height: 2.4rem;
+        }
+
+        &:hover {
+            border-color: @hm-slate-400;
+            box-shadow: 0 1px 3px fade(@hm-bg-dark, 15%);
+        }
+
+        a.filename {
+            padding: 0;
+        }
+
+        .attachment-size {
+            padding-left: .4rem;
+        }
+
+        a.dropdown,
+        a.delete,
+        a.cancelupload {
+            margin-left: .25rem;
+            border-radius: 50%;
+            width: 1.8rem;
+            height: 1.8rem;
+            line-height: 1.8rem;
+            align-self: center;
+            text-align: center;
+
+            &:before {
+                height: 1.8rem;
+                line-height: 1.8rem;
+                width: 1.8rem;
+            }
+
+            &:hover {
+                background-color: @hm-slate-100;
+            }
+        }
+    }
+}
+
+html.dark-mode {
+    body.task-mail.action-preview,
+    body.task-mail.action-show {
+        #layout-content > .content.frame-content {
+            background-color: @hm-bg-dark;
+        }
+
+        .hm-card {
+            background-color: @hm-dark-surface;
+            border-color: @hm-dark-border;
+        }
+
+        #message-header .header-summary .rcmContactAddress {
+            color: @color-dark-font;
+        }
+    }
+
+    .attachmentslist {
+        background-color: transparent;
+        border: 0;
+
+        li {
+            background-color: @hm-dark-surface;
+            border-color: @hm-dark-border;
+
+            &:hover {
+                border-color: @hm-slate-500;
+                box-shadow: none;
+            }
+
+            a.dropdown:hover,
+            a.delete:hover {
+                background-color: @hm-dark-hover-bg;
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Floating compose card (hellomail.js), wide screens only
+// ---------------------------------------------------------------------------
+
+// Wider than Elastic's 768px "small" breakpoint (1rem = 14px here), so the
+// compose page inside keeps its full editor toolbar and header buttons
+// instead of the phone UI.
+@hm-compose-width:       58rem;
+@hm-compose-height:      46rem;
+@hm-compose-head-height: 2.75rem;
+
+.hm-compose {
+    position: fixed;
+    right: 1.5rem;
+    bottom: 0;
+    z-index: 1040;   // above Elastic popovers, below its dialogs
+    width: @hm-compose-width;
+    height: @hm-compose-height;
+    max-width: calc(100vw - 3rem);
+    max-height: calc(100vh - 1rem);
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border-radius: .75rem .75rem 0 0;
+    box-shadow: 0 0 0 1px fade(@hm-bg-dark, 8%), 0 8px 28px fade(@hm-bg-dark, 30%);
+    overflow: hidden;
+
+    &.minimized {
+        height: @hm-compose-head-height;
+    }
+
+    &.maximized {
+        width: 90vw;
+        height: 90vh;
+        right: 5vw;
+        bottom: 5vh;
+        border-radius: .75rem;
+    }
+}
+
+.hm-compose-head {
+    display: flex;
+    align-items: center;
+    flex: 0 0 @hm-compose-head-height;
+    height: @hm-compose-head-height;
+    padding: 0 .5rem 0 1rem;
+    background-color: @hm-slate-800;
+    color: #fff;
+    cursor: default;
+    user-select: none;
+
+    .hm-compose-title {
+        flex: 1;
+        min-width: 0;
+        .overflow-ellipsis();
+        font-weight: 600;
+        font-size: .95rem;
+    }
+}
+
+a.hm-compose-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    margin-left: .1rem;
+    border-radius: 50%;
+    color: #fff;
+    text-decoration: none;
+    line-height: 1;
+
+    &:before {
+        &:extend(.font-icon-class);
+        float: none;
+        width: auto;
+        height: auto;
+        margin: 0;
+        font-size: .9rem;
+        line-height: 1;
+    }
+
+    &:hover,
+    &:focus {
+        background-color: fade(#fff, 15%);
+        color: #fff;
+        text-decoration: none;
+    }
+
+    &.minimize:before {
+        content: @fa-var-minus;
+    }
+    &.maximize:before {
+        content: @fa-var-expand;
+    }
+    &.close:before {
+        content: @fa-var-times;
+    }
+}
+
+.hm-compose.minimized a.hm-compose-btn.minimize:before {
+    content: @fa-var-window-maximize;
+}
+
+.hm-compose.maximized a.hm-compose-btn.maximize:before {
+    content: @fa-var-compress;
+}
+
+.hm-compose-frame {
+    flex: 1;
+    width: 100%;
+    border: 0;
+    background-color: #fff;
+}
+
+html.dark-mode {
+    .hm-compose {
+        background-color: @hm-bg-dark;
+        box-shadow: 0 0 0 1px @hm-dark-border, 0 8px 28px fade(#000, 50%);
+    }
+
+    .hm-compose-head {
+        background-color: @hm-dark-surface;
+        border-bottom: 1px solid @hm-dark-border;
+    }
+
+    .hm-compose-frame {
+        background-color: @hm-bg-dark;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// List loading indicator (hellomail.js toggles .hm-loading on #layout-list)
+// ---------------------------------------------------------------------------
+
+.hm-progress {
+    position: relative;
+    height: 3px;
+    margin-top: -2px;   // sits in the gap under the search pill
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity .15s ease;
+    pointer-events: none;
+    z-index: 1;
+
+    &:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: -40%;
+        width: 40%;
+        border-radius: 3px;
+        background-color: @hm-accent;
+        animation: hm-progress 1.1s ease-in-out infinite;
+    }
+}
+
+#layout-list.hm-loading {
+    .hm-progress {
+        opacity: 1;
+    }
+
+    #messagelist-content {
+        opacity: .6;
+        transition: opacity .15s ease .15s;
+    }
+}
+
+@keyframes hm-progress {
+    0%   { left: -40%; width: 40%; }
+    50%  { width: 55%; }
+    100% { left: 100%; width: 40%; }
+}
+
+// ---------------------------------------------------------------------------
+// Icons: Material Symbols served under the Font Awesome code points
+// (see tools/icons/build.py). Declared after Elastic's own @font-face rules
+// for "Icons", so these win for both weights Elastic uses.
+// ---------------------------------------------------------------------------
+
+@font-face {
+    font-family: 'Icons';
+    font-style: normal;
+    font-weight: 400;
+    font-display: block;
+    src: url("../fonts/icons-regular.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: 'Icons';
+    font-style: normal;
+    font-weight: 900;
+    font-display: block;
+    src: url("../fonts/icons-solid.woff2") format("woff2");
+}
+
+
+// ---------------------------------------------------------------------------
+// Message list, part 3: checkboxes, thread counts, density
+// ---------------------------------------------------------------------------
+
+@media screen and (min-width: (@screen-width-large + 1px)) {
+    .messagelist td.selection {
+        width: 1.75rem;
+        padding: 0 0 0 .5rem;
+        justify-content: center;
+
+        & > input,
+        & > .custom-control {
+            margin: 0;
+        }
+    }
+}
+
+.messagelist .hm-thread-count {
+    margin-left: .35rem;
+    font-size: 85%;
+    color: @color-list-secondary;
+    font-weight: normal;
+}
+
+// Density: the row height is the line height of the subject cell spans
+// (35px by default, see @listing-line-height)
+@hm-row-compact:     26px;
+@hm-row-comfortable: 44px;
+
+@media screen and (min-width: (@screen-width-large + 1px)) {
+    html.hm-density-compact .messagelist {
+        td.subject span {
+            line-height: @hm-row-compact;
+        }
+        td.flags > span {
+            line-height: 1;
+        }
+        .hm-actions a {
+            width: 1.6rem;
+            height: 1.6rem;
+        }
+    }
+
+    html.hm-density-comfortable .messagelist td.subject span {
+        line-height: @hm-row-comfortable;
+    }
+}
+
+// Task menu "Contacts": Elastic uses the group icon, which also marks contact
+// groups in the address book. The rail gets the address book icon instead
+// (Material "contacts" under the Font Awesome address-book code point).
+#taskmenu a.contacts:before {
+    content: @fa-var-address-book;
+}
+
+// ---------------------------------------------------------------------------
+// Pointer cursor on everything clickable (Elastic uses the arrow on lists)
+// ---------------------------------------------------------------------------
+
+a,
+button,
+[role="button"],
+.listing tbody tr,
+.listing tbody td,
+.listing li > a,
+.listing li > div > a,
+.messagelist td.subject a,
+.messagelist td.subject span.subject,
+.messagelist td.flags > span,
+.messagelist td.subject span.msgicon.status,
+.folderlist li a,
+#taskmenu a,
+.toolbar a,
+.menu a,
+.searchbar a,
+.custom-control-label,
+.custom-switch label,
+label[for],
+select,
+input[type="checkbox"],
+input[type="radio"],
+.attachmentslist li a,
+.hm-actions a,
+a.hm-account,
+a.sidebar-toggle,
+.hm-compose-btn,
+.pagenav a {
+    cursor: pointer;
+}
+
+a.disabled,
+.disabled a,
+button:disabled,
+.listing tbody tr.disabled,
+.pagenav a.disabled,
+.toolbar a.disabled {
+    cursor: default;
+}
+
+// ---------------------------------------------------------------------------
+// No task rail on wide screens (hellomail.js adds html.hm-no-rail when a
+// sidebar exists): logo and Compose pill at the top of the sidebar
+// ---------------------------------------------------------------------------
+
+@media screen and (min-width: (@screen-width-medium + 1px)) {
+    html.hm-no-rail {
+        #layout-menu {
+            display: none;
+        }
+
+        // In mail that header only held the username (now in the account
+        // menu) and the two buttons moved to the brand row. Other tasks
+        // keep their header, it carries the section title.
+        & body.task-mail #layout-sidebar.listbox > .header {
+            display: none;
+        }
+
+        #hm-sidebar-top {
+            flex: 0 0 auto;
+            padding: .6rem .75rem .75rem .5rem;
+        }
+
+        .hm-sidebar-brand {
+            display: flex;
+            align-items: center;
+            height: 2.75rem;
+            margin-bottom: .75rem;
+
+            a.sidebar-toggle {
+                flex: 0 0 2.75rem;
+                width: 2.75rem;
+                height: 2.75rem;
+                line-height: 2.75rem;
+                margin: 0;
+                padding: 0;
+                border-radius: 50%;
+                text-align: center;
+                order: 0;
+
+                &:before {
+                    float: none;
+                    margin: 0;
+                    width: auto;
+                    line-height: 2.75rem;
+                }
+
+                &:hover {
+                    background-color: @hm-slate-200;
+                }
+            }
+
+            .hm-logo-link {
+                flex: 1;
+                min-width: 0;
+                display: flex;
+                align-items: center;
+                padding-left: .5rem;
+
+                img {
+                    max-height: 1.9rem;
+                    max-width: 100%;
+                }
+            }
+
+            a.sidebar-menu {
+                flex: 0 0 2.25rem;
+                width: 2.25rem;
+                height: 2.25rem;
+                line-height: 2.25rem;
+                margin: 0;
+                padding: 0;
+                border-radius: 50%;
+                text-align: center;
+
+                &:before {
+                    float: none;
+                    margin: 0;
+                    width: auto;
+                    line-height: 2.25rem;
+                }
+
+                &:hover {
+                    background-color: @hm-slate-200;
+                }
+            }
+        }
+
+        a.hm-compose-pill {
+            display: inline-flex;
+            align-items: center;
+            height: 3rem;
+            padding: 0 1.4rem 0 1.1rem;
+            margin-left: .5rem;
+            border-radius: 1.5rem;
+            background-color: @hm-accent;
+            color: @hm-on-accent;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 1px 3px fade(@hm-bg-dark, 25%);
+            transition: box-shadow .12s ease, background-color .12s ease;
+
+            // Note: `&:extend(.font-icon-class)` does not work here, LESS
+            // extends never cross a media query boundary. Spell it out.
+            &:before {
+                content: @fa-var-pencil-alt;
+                display: block;
+                float: none;
+                width: auto;
+                height: auto;
+                margin: 0 .6rem 0 0;
+                line-height: 1;
+                font-size: 1.25rem;
+                font-family: 'Icons';
+                font-style: normal;
+                font-weight: 900;
+                text-decoration: inherit;
+                text-align: center;
+                -moz-osx-font-smoothing: grayscale;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            &:hover,
+            &:focus {
+                background-color: darken(@hm-accent, 6%);
+                box-shadow: 0 2px 6px fade(@hm-bg-dark, 30%);
+                color: @hm-on-accent;
+                text-decoration: none;
+            }
+        }
+
+        // collapsed sidebar: icon-only pill, no logo
+        #layout-sidebar.listbox.collapsed {
+            #hm-sidebar-top {
+                padding-left: .375rem;
+                padding-right: .375rem;
+            }
+
+            .hm-sidebar-brand {
+                justify-content: center;
+
+                .hm-logo-link,
+                a.sidebar-menu {
+                    display: none;
+                }
+            }
+
+            a.hm-compose-pill {
+                width: 2.75rem;
+                height: 2.75rem;
+                padding: 0;
+                margin: 0;
+                justify-content: center;
+
+                &:before {
+                    margin: 0;
+                }
+
+                .inner {
+                    display: none;
+                }
+            }
+        }
+
+        // the account menu is now the only way to other tasks; mark the
+        // current one (the menu is a child of <body>, hence these selectors)
+        & body.task-mail #hm-account-menu ul.menu a.mail,
+        & body.task-addressbook #hm-account-menu ul.menu a.contacts,
+        & body.task-settings #hm-account-menu ul.menu a.settings {
+            color: @hm-accent-text;
+            font-weight: 600;
+        }
+    }
+
+    html.hm-no-rail.dark-mode {
+        .hm-sidebar-brand a.sidebar-toggle:hover,
+        .hm-sidebar-brand a.sidebar-menu:hover {
+            background-color: @hm-dark-hover-bg;
+        }
+    }
+}

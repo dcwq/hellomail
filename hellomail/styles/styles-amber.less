@@ -1,0 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Entry point for the "amber" theme. Less resolves variables lazily and the
+// last definition wins, so importing the theme after the full stylesheet
+// recolours everything derived from the theme variables.
+@import "styles";
+@import "themes/amber";

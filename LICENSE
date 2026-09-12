@@ -1,0 +1,26 @@
+hellomail is distributed under two licenses, file by file. Each source file
+carries an SPDX-License-Identifier header; this file is the summary.
+
+1. Original work: GPL-3.0-or-later (LICENSES/GPL-3.0-or-later.txt)
+
+   hellomail/hellomail.js, hellomail/styles/_variables.less,
+   hellomail/styles/_styles.less, hellomail/styles/styles*.less,
+   hellomail/styles/themes/*.less, hellomail/localization/*,
+   hellomail/images/logo.svg, hellomail/meta.json, plugins/hellomail/*,
+   tools/*, Makefile, package.json, documentation.
+
+2. Work derived from the Elastic skin of Roundcube Webmail,
+   Copyright (c) The Roundcube Dev Team: CC BY-SA 3.0
+   (LICENSES/CC-BY-SA-3.0.txt). See NOTICE for the file list.
+
+   hellomail/templates/includes/layout.html,
+   hellomail/templates/includes/footer.html,
+   hellomail/watermark.html,
+   and the compiled stylesheets hellomail/styles/styles.css and
+   hellomail/styles/styles-*.css, which contain Elastic's rules compiled
+   together with the GPL-licensed overrides.
+
+3. Bundled third-party assets
+
+   hellomail/fonts/icons-*.woff2: built from Material Symbols,
+   Copyright Google LLC, Apache License 2.0 (LICENSES/Apache-2.0.txt).

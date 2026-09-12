@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+/**
+ * Hellogmail skin for Roundcube - style entry point
+ *
+ * This file does not restyle anything by itself. It compiles the complete
+ * Elastic stylesheet with our overrides injected through the two hook files
+ * Elastic reserves for child skins:
+ *
+ *   _variables.less  - pulled in at the end of elastic/styles/variables.less
+ *                      (after colors.less), so every Elastic variable can be
+ *                      redefined here before any rule is generated
+ *   _styles.less     - pulled in at the very end of elastic/styles/styles.less,
+ *                      for rules that cannot be expressed as variable changes
+ *
+ * Both hooks are resolved through the lessc include path (see Makefile), which
+ * is why they live next to this file and not inside the Elastic directory.
+ *
+ * The relative import below matches the on-server layout
+ * (skins/elastic next to skins/hellomail); the build replicates that layout
+ * under build/skins so the same file compiles unchanged in the repository.
+ */
+
+@import "../../elastic/styles/styles";

@@ -1,0 +1,10 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 48" width="220" height="48" role="img" aria-label="hellomail">
+  <!-- Neutral default logo. Mid-grey reads on both light and dark backgrounds.
+       Replace it through $config['skin_logo'], see README "Branding". -->
+  <g fill="none" stroke="#7c8ba1" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="4" y="10" width="40" height="28" rx="6"/>
+    <path d="M6 14l18 12 18-12"/>
+  </g>
+  <text x="56" y="32" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="600" fill="#7c8ba1" letter-spacing="-0.5">hellomail</text>
+</svg>

@@ -1,0 +1,19 @@
+hellomail - a Roundcube skin extending Elastic
+
+This product includes material derived from the Elastic skin of
+Roundcube Webmail (https://roundcube.net), Copyright (c) The Roundcube
+Dev Team, licensed under the Creative Commons Attribution-ShareAlike 3.0
+License (https://creativecommons.org/licenses/by-sa/3.0/):
+
+  hellomail/templates/includes/layout.html   copied from Elastic 1.6.6, one block changed
+  hellomail/templates/includes/footer.html   copied from Elastic 1.6.6, lines added
+  hellomail/watermark.html                   structure and script from Elastic 1.6.6
+  hellomail/styles/styles.css                Elastic's LESS compiled with this skin's overrides
+  hellomail/styles/styles-*.css              same, one file per colour theme
+
+These files remain under CC BY-SA 3.0. Everything else in this repository
+is original work under GPL-3.0-or-later, see LICENSE.
+
+This product includes icon fonts generated from Material Symbols,
+Copyright Google LLC, licensed under the Apache License, Version 2.0
+(https://github.com/google/material-design-icons).

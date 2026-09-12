@@ -1,0 +1,17 @@
+<?php
+
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+// Theme used when the user has not chosen one:
+// green, ocean, violet, rose, amber, graphite
+$config['hellomail_default_theme'] = 'green';
+
+// Number of characters of body text shown next to the subject
+$config['hellomail_snippet_length'] = 140;
+
+// How many bytes of the first text part are fetched per message
+// HTML mail carries a lot of <style> before any text, hence the generous default
+$config['hellomail_snippet_fetch_bytes'] = 16384;
+
+// Snippet cache lifetime (rcube_cache syntax), false disables caching
+$config['hellomail_snippet_cache_ttl'] = '30d';
